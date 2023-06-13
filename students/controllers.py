@@ -1,13 +1,13 @@
 from flask import request, jsonify, make_response
 from flask_login import login_user, logout_user, current_user, login_required, LoginManager
-from flask_jwt_extended import create_access_token, unset_jwt_cookies
+from flask_jwt_extended import create_access_token, unset_jwt_cookies, unset_jwt_cookies,JWTManager
 from flask_bcrypt import Bcrypt
 from .. import db
 from ..students.models import Student
 
 bcrypt = Bcrypt()
-
 login_manager= LoginManager()
+jwt =JWTManager()
 
 @login_manager.user_loader
 def load_user(student_id):
@@ -42,15 +42,15 @@ def register_student():
             data =request.get_json()
         name = data.get('name')
         email = data.get('email')
-        password = data.get('password')
         school =data.get('school')
         school_class = data.get('school_class')
         superpower =data.get('superpower')
         date_of_birth =data.get('date_of_birth')
         level=data.get('level')
+        password = data.get('password')
         
-        # if not name or not email or not password or not school or not school_class or not superpower or not date_of_birth or not level:
-        #     return jsonify(message ="There are some missing field's, all fields are required"), 400
+        if not name or not email or not password or not school or not school_class or not superpower or not date_of_birth or not level:
+            return jsonify(message ="There are some missing field's, all fields are required"), 400
         email_exists = Student.query.filter_by(email=email).first()
         if email_exists:
             return jsonify(message =" Email is already in use"), 400
@@ -59,8 +59,8 @@ def register_student():
         elif len(email) < 4:
             return jsonify(message ="Email is invalid"), 400
         else:
-            # password is hashed
-            # salt = bcrypt.genSalt(rounds=12)
+            
+           # Generate the salted password hash
             hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
       
                 
@@ -78,7 +78,7 @@ def register_student():
     
         db.session.add(new_student)
         db.session.commit()
-        # login_user(new_student, remember=True)
+        login_user(new_student, remember=True)
         return jsonify(message ="Student Created"), 201
     
     except Exception as e:
@@ -93,8 +93,18 @@ def login():
         if not email or not password:
             return jsonify(message="Email and password are requires"), 400
         
+        student =Student.query.filter_by(email=email).first()
+        if not student or not bcrypt.check_password_hash(student.password, password):
+            return jsonify(message="Invalid email or password"), 401
         
-       
-       
-    except print(0):
-        pass
+        login_user(student)
+        
+        access_token = create_access_token(identity= student.id)
+        
+        response = make_response(jsonify(access_token = access_token, name=student.name, email = student.email))
+        response.set_cookie('access_token', access_token)
+        
+        return response, 200
+    
+    except Exception as e:
+        return(str(e))

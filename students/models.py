@@ -1,8 +1,9 @@
 from datetime import datetime
+from flask_login import UserMixin
 from .. import db 
 from sqlalchemy import func
 
-class Student(db.Model):
+class Student(db.Model,UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)

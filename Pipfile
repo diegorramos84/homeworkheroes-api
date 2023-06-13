@@ -10,10 +10,10 @@ flask-sqlalchemy = "*"
 python-dotenv = "*"
 flask-migrate = "*"
 psycopg2 = "*"
-flask-login = "*"
 flask-jwt-extended = "*"
 bcrypt = "*"
 flask-bcrypt = "*"
+flask-login = "*"
 
 [dev-packages]
 
