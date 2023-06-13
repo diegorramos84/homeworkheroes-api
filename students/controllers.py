@@ -108,3 +108,16 @@ def login():
     
     except Exception as e:
         return(str(e))
+
+def logout():
+    try:
+       if current_user.is_authenticated:
+           # logout student
+           logout_user()
+           # clear token
+           response = make_response(jsonify(message= "user logged out successfully"))
+           unset_jwt_cookies(response)
+           return response
+           
+    except print(0):
+        pass
