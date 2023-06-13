@@ -15,6 +15,7 @@ def load_user(student_id):
 
 def format_student(self):
     return {
+        "id":self.id,
         "name" : self.name,
         "email": self.email,
         "password" :self.password,
@@ -28,12 +29,30 @@ def format_student(self):
 
 # @app.route('/student', methods=['GET'])
 def get_all_students():
-    students=Student.query.all()
-    students_list=[]
+    if request.method == 'GET':
+        students = Student.query.all()
+        students_list = []
+        
+        for student in students:
+            students_list.append(format_student(student))
+        
+        return jsonify(students_list)
     
-    for student in students:
-       students_list.append(format_student(student))
-       return jsonify(students_list)
+# Get student by ID
+def get_student(student_id):
+    student = Student.query.get(student_id)
+    if student:
+        return jsonify(format_student(student))
+    return jsonify(message='Student not found'), 404
+
+def delete_student(student_id):
+    student = Student.query.get(student_id)
+    if student:
+        db.session.delete(student)
+        db.session.commit()
+        return jsonify(message='Student deleted')
+    return jsonify(message='Student not found'), 404
+
 
 # @app.route('/register', methods=['POST'])
 def register_student():
@@ -119,5 +138,48 @@ def logout():
            unset_jwt_cookies(response)
            return response
            
-    except print(0):
-        pass
+    except Exception as e:
+        return(str(e))
+    
+    
+@login_required
+def get_student_profile():
+    # Assuming the student ID is passed in the request headers
+    student_id = request.headers.get('student_id')
+    # Fetch student from the database based on the user ID
+    student = Student.query.filter_by(id=student_id).first()
+    print(student)
+
+    if student:
+        return jsonify({
+            '_id': student.id,
+            'name': student.name,
+            'email': student.email
+        })
+    else:
+        return jsonify(error='Student not found'), 404
+
+
+def update_student_profile():
+    # Assuming the student ID is passed in the request headers
+    student_id = request.headers.get('student_id')
+    # Fetch student from the database based on the student ID
+    student = Student.query.filter_by(id=student_id).first()
+
+    if student:
+        student.name = request.json.get('name', student.name)
+        student.email = request.json.get('email', student.email)
+
+        password = request.json.get('password')
+        if password:
+            student.password = password
+
+        db.session.commit()
+
+        return jsonify({
+            '_id': student.id,
+            'name': student.name,
+            'email': student.email
+        })
+    else:
+        return jsonify(error='Student not found'), 404
