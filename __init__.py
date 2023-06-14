@@ -16,7 +16,7 @@ def create_app(config_mode):
     from .students import models
     from .homework import models
     from .teachers import models
-    from .studentTeacherHomework import models
+    from .assignments import models
 
     db.init_app(app)
     migrate.init_app(app, db)

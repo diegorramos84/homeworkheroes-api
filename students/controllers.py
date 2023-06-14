@@ -5,26 +5,27 @@ from .models import Student
 
 def list_all_students_controller():
     students = Student.query.all()
-    homework_list = []
+    assignment_list = []
     for student in students:
-        homeworks = student.homeworks
-        for h in homeworks:
-            homework = {
-                "subject": h.subject,
-                "content": h.content,
-                "deadline": h.deadline,
-                "feedback": h.feedback,
-                "extra-resources": h.extra_resources,
-                "teacher_id": h.teacher_id,
-                "teacher_name": h.teacher.name
+        assignments = student.assignments
+        for a in assignments:
+            assignment = {
+                "completed": a.completed,
+                "subject": a.homework.subject,
+                "content": a.homework.content,
+                "deadline": a.deadline,
+                "feedback": a.feedback,
+                "extra-resources": a.homework.extra_resources,
+                "teacher_id": a.homework.teacher_id,
+                "teacher_name": a.homework.teacher.name
             }
-            homework_list.append(homework)
+            assignment_list.append(assignment)
 
         student_obj = {
             "name": student.name,
             "superpower": student.superpower,
             "age": student.age,
             "level": student.level,
-            "homeworks": homework_list
+            "assignments": assignment_list
         }
     return jsonify(student_obj)
