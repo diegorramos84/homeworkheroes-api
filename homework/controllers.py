@@ -7,7 +7,6 @@ def get_all_homeworks():
     homework = Homework.query.all()
     homework_list = []
     for h in homework:
-        print(h)
         hw = {
             "id": h.id,
             "subject": h.subject,
