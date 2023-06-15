@@ -3,7 +3,7 @@ from flask import request, jsonify, make_response
 from flask_login import login_required, current_user
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from ..app import app
-from .controllers import register_student, login , logout, get_all_students,delete_student,get_student, get_student_profile, update_student_profile ,register_teacher
+from .controllers import register_student, login , logout, get_all_students,delete_student,get_student,  update_student_profile ,register_teacher
 from ..middleware.protected_route import protect
 
 
@@ -14,10 +14,10 @@ from ..middleware.protected_route import protect
 def get_all_students_route():
     return get_all_students()
 
-@app.route('/student/<int:student_id>', methods=['DELETE', 'GET'])
-def student():
-    if request.method == 'DELETE': return delete_student()
-    if request.method == 'GET': return get_student()
+@app.route('/students/<id>', methods=['DELETE', 'GET'])
+def student(id):
+    if request.method == 'DELETE': return delete_student(id)
+    if request.method == 'GET': return get_student(id)
 
 
 # @desc    Register a new user
@@ -54,9 +54,9 @@ def logout_route():
 @app.route('/students/<id>', methods=['GET','PUT'])
 # @protect(['student'])
 
-def profile(id):
-    if request.method == 'GET': return get_student_profile(id)
-    if request.method == 'PUT': return update_student_profile(id)
+# def profile(id):
+#     if request.method == 'GET': return get_student_profile(id)
+#     if request.method == 'PUT': return update_student_profile(id)
 
 
 # Error handlers

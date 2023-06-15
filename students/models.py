@@ -31,7 +31,7 @@ class Student(db.Model, UserMixin):
     #     self.password = password
     #     self.role = role if role else 'student'
     def __repr__(self):
-        return f"Student(name={self.name}, superpower={self.superpower},  date_of_birth={self.age}, level={self.level}, assignments={self.assignments}"
+        return f"Student(name={self.name}, superpower={self.superpower},  date_of_birth={self.date_of_birth}, level={self.level}, assignments={self.assignments}"
 
 
 # class Teacher(db.Model, UserMixin):
