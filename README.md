@@ -45,7 +45,7 @@ Available endpoints:
 ### Teachers
 
 ```python
-<!-- Homework model for creating or updating -->
+<!-- Teacher moder for registration -->
   {
     "name": "Mr. Teacher",
     "email": "teacher@mail.com",
