@@ -1,4 +1,5 @@
 from sqlalchemy import func
+from flask_login import UserMixin
 from .. import db
 
 class Teacher(db.Model, UserMixin):
