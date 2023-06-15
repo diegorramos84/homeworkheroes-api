@@ -17,4 +17,4 @@ class Assignment(db.Model):
 
 
     def __repr__(self):
-        return f"Assigment(date={self.date}, deadline={self.deadline}, subject={self.homework}, feedback={self.feedback}, student_id={self.student_id}, student={self.student.name}, completed={self.completed}"
+        return f"Assignment(date={self.date}, deadline={self.deadline}, subject={self.homework}, feedback={self.feedback}, student_id={self.student_id}, student={self.student.name}, completed={self.completed}"
