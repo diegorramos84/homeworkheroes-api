@@ -19,12 +19,48 @@ Available endpoints:
 
 ### Students
 
+```python
+<!-- Homework model for creating or updating -->
+  {
+    "subject": "This is a subject",
+    "content": "I am content",
+    "extra_resources": "www.youtube.com", -> this field is optional
+    "teacher_id: 1
+  }
+```
+
+| Method | URL | Description |
+|:-------------:|:-------------:|:-----:|
+| `GET` | `/homework` | list all homework available |
+| `POST` | `/homework` | create a new homework for a teacher |
+| `GET` | `/homework/id` | get a homework by its ID |
+| `PATCH` | `/homework/id` | update a specific homework |
+| `DELETE` | `/homework/id` | delete a specific homework |
+
 ### Teachers
+
+```python
+<!-- Homework model for creating or updating -->
+  {
+    "subject": "This is a subject",
+    "content": "I am content",
+    "extra_resources": "www.youtube.com", -> this field is optional
+    "teacher_id: 1
+  }
+```
+
+| Method | URL | Description |
+|:-------------:|:-------------:|:-----:|
+| `GET` | `/homework` | list all homework available |
+| `POST` | `/homework` | create a new homework for a teacher |
+| `GET` | `/homework/id` | get a homework by its ID |
+| `PATCH` | `/homework/id` | update a specific homework |
+| `DELETE` | `/homework/id` | delete a specific homework |
 
 ### Homework
 
 ```python
-<!-- Homework model for creation or updating -->
+<!-- Homework model for creating or updating -->
   {
     "subject": "This is a subject",
     "content": "I am content",
@@ -42,8 +78,9 @@ Available endpoints:
 | `DELETE` | `/homework/id` | delete a specific homework |
 
 ### Assignments
+
 ```python
-<!-- Assignment model for creation or updating -->
+<!-- Assignment model for creating or updating -->
   {
     "deadline": "YYYYMMDD",
     "feedback": "I am a feedback from a teacher",
