@@ -12,6 +12,9 @@ def hello():
     return "Hello World!"
 
 from .students import routes
+from .homework import routes
+from .assignments import routes
+
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -1,16 +1,31 @@
 # homeworkheroes-api
 
-Foobar is a Python library for dealing with word pluralization.
+This is the backend of the HomeworkHeroes app
 
 ## Installation
-
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
-
+Begin by using pip to install Pipenv and its dependencies
+``` bash
+pip install pipenv
+```
+Then change directory to the folder containing your Python project and initiate Pipenv,
 ```bash
-pip install foobar
+cd homeworkheroes-api
+pipenv install
 ```
 
 ## Usage
+
+Available endpoints:
+
+### Students
+
+### Teachers
+
+### Homework
+/homework
+
+### Assignments
+/assignments
 
 ```python
 import foobar

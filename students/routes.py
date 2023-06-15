@@ -1,3 +1,4 @@
+
 from flask import request, jsonify, make_response
 from flask_login import login_required, current_user
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -120,3 +121,5 @@ def teacher_dashboard():
         return jsonify(message="Welcome to the teacher dashboard!"),200
     else:
         return jsonify(message="Access denied"), 401
+
+

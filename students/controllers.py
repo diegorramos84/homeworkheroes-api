@@ -1,3 +1,4 @@
+
 from flask import request, jsonify, make_response
 from flask_login import login_user, logout_user, current_user, login_required, LoginManager
 from flask_jwt_extended import create_access_token, unset_jwt_cookies, unset_jwt_cookies, JWTManager,set_access_cookies
@@ -40,16 +41,9 @@ def get_all_students():
             assignments = student.assignment
             for a in assignments:
                 assignment = {
-                "completed": a.completed,
-                "subject": a.homework.subject,
-                "content": a.homework.content,
-                "deadline": a.deadline,
-                "feedback": a.feedback,
-                "extra-resources": a.homework.extra_resources,
-                "teacher_id": a.homework.teacher_id,
-                "teacher_name": a.homework.teacher.name
-            }
-            assignment_list.append(assignment)
+
+
+
             student.assignments = assignment_list
             students_list.append(format_student(student))
 
@@ -292,6 +286,7 @@ def register_teacher(name, email, school, school_class, role, password):
     db.session.commit()
 
     return jsonify(message="Teacher registered successfully"), 201
+
 
 
 
