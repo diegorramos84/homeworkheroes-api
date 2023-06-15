@@ -22,23 +22,45 @@ Available endpoints:
 ### Teachers
 
 ### Homework
-/homework
-
-### Assignments
-/assignments
 
 ```python
-import foobar
-
-# returns 'words'
-foobar.pluralize('word')
-
-# returns 'geese'
-foobar.pluralize('goose')
-
-# returns 'phenomenon'
-foobar.singularize('phenomena')
+<!-- Homework model for creation or updating -->
+  {
+    "subject": "This is a subject",
+    "content": "I am content",
+    "extra_resources": "www.youtube.com", -> this field is optional
+    "teacher_id: 1
+  }
 ```
+
+| Method | URL | Description |
+|:-------------:|:-------------:|:-----:|
+| `GET` | `/homework` | list all homework available |
+| `POST` | `/homework` | create a new homework for a teacher |
+| `GET` | `/homework/id` | get a homework by its ID |
+| `PATCH` | `/homework/id` | update a specific homework |
+| `DELETE` | `/homework/id` | delete a specific homework |
+
+### Assignments
+```python
+<!-- Assignment model for creation or updating -->
+  {
+    "deadline": "YYYYMMDD",
+    "feedback": "I am a feedback from a teacher",
+    "completed": "I am false by default"
+    "student_id": 1,
+    "homework_id": 1
+  }
+```
+
+| Method | URL | Description |
+|:-------------:|:-------------:|:-----:|
+| `GET` | `/assignment` | list all assignments available |
+| `POST` | `/assignment` | create a new assignments to a student using a specific homework |
+| `GET` | `/assignment/id` | get a assigment by its ID |
+| `PATCH` | `/assignment/id` | update a specific assignment (only deadline if available) |
+| `DELETE` | `/assignment/id` | delete a specific assigment |
+
 
 ## Contributing
 
