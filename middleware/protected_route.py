@@ -1,40 +1,41 @@
-
-import jwt
 from functools import wraps
 from flask import request, jsonify
 import os
-from models import User  
+import jwt
+from dotenv import load_dotenv
 
-# logic role based access control -  authentication -> based on the role of the user i.e Teacher or student 
+from ..students.models import Student, Teacher
 
+load_dotenv()
 
-
-# Custom decorator for protecting routes
-def protect(allowed_roles):
+def protect(role):
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            token = request.cookies.get('jwt')
-
-            if token:
+            access_token = request.cookies.get('access_token')
+            print("access_token:", access_token) 
+            if access_token:
+                jwt_secret = os.getenv('JWT_SECRET')
+                print("JWT Secret:", jwt_secret) 
                 try:
-                    decoded = jwt.decode(token, os.getenv('JWT_SECRET'), algorithms=['HS256'])
-                    user_id = decoded.get('userID')
+                    decoded = jwt.decode(access_token, jwt_secret, algorithms=['HS256'])
+                    print("decoded:", decoded)
+                    student_id = decoded.get('student_id')
+                    teacher_id = decoded.get('teacher_id')
+                    print("student_id:", student_id)
+                    
+                    student = Student.query.filter_by(id=student_id).first()
+                    teacher = Teacher.query.filter_by(id=teacher_id).first()
 
-                    # Fetch user based on the user ID from the token
-                    user = User.query.filter_by(id=user_id).first()
+                    if not student:
+                        return jsonify(error='Not authorized, student not found'), 401
 
-                    if not user:
-                        return jsonify(error='Not authorized, user not found'), 401
-
-                    # Check user role and allow access based on role
-                    if 'teacher' in allowed_roles and request.path.startswith('/teachers'):
-                        # Teacher role accessing teachers side of the app
-                        request.user = user
+                    if 'Teacher' in role and request.path.startswith('/teachers'):
+                        request.teacher = teacher
+                        print("Student:", request.student)
                         return func(*args, **kwargs)
-                    elif 'student' in allowed_roles and request.path.startswith('/students'):
-                        # Student role accessing students side of the app
-                        request.user = user
+                    elif 'Student' in role and request.path.startswith('/students'):
+                        request.student = student
                         return func(*args, **kwargs)
                     else:
                         return jsonify(error='Not authorized, invalid role'), 403
@@ -48,3 +49,5 @@ def protect(allowed_roles):
         return wrapper
 
     return decorator
+
+

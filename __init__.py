@@ -16,12 +16,13 @@ def create_app(config_mode):
     app = Flask(__name__)
     CORS(app)
     app.config.from_object(config[config_mode])
-
+    app.config['JWT_SECRET_KEY'] = 'abc123'
 
     from .students import models
 
     db.init_app(app)
     migrate.init_app(app, db)
     login_manager.init_app(app)
-    jwt =JWTManager(app)
+    jwt.init_app(app)
+
     return app
