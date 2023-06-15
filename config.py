@@ -1,7 +1,15 @@
 import os
+from uuid import uuid4
 
 class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = True
+    SECRET_KEY = str(uuid4().hex)
+  
+    
+    JWT_TOKEN_LOCATION = ["headers", "cookies", "json",]
+    JWT_COOKIE_SECURE = False
+    JWT_COOKIE_CSRF_PROJECT = True
+    JWT_SECRET= "abc123"
 
 class DevelopmentConfig(Config):
     DEVELOPMENT = True
