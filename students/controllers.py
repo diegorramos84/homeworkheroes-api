@@ -5,7 +5,8 @@ from flask_jwt_extended import create_access_token, unset_jwt_cookies, unset_jwt
 from flask_bcrypt import Bcrypt
 from .. import db, login_manager,app
 
-from ..students.models import Student, Teacher
+from ..students.models import Student
+from ..teachers.models import Teacher
 
 bcrypt = Bcrypt()
 # login_manager = LoginManager(app)
@@ -41,11 +42,18 @@ def get_all_students():
             assignments = student.assignment
             for a in assignments:
                 assignment = {
-
-
-
-            student.assignments = assignment_list
-            students_list.append(format_student(student))
+                "completed": a.completed,
+                "subject": a.homework.subject,
+                "content": a.homework.content,
+                "deadline": a.deadline,
+                "feedback": a.feedback,
+                "extra-resources": a.homework.extra_resources,
+                "teacher_id": a.homework.teacher_id,
+                "teacher_name": a.homework.teacher.name
+            }
+                assignment_list.append(assignment)
+                student.assignments = assignment_list
+                students_list.append(format_student(student))
 
         return jsonify(students_list)
 

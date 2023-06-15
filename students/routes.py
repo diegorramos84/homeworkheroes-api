@@ -106,6 +106,7 @@ def register_teacher_route():
 @jwt_required()
 def student_dashboard():
     if current_user.role == 'student':
+        
         # Only accessible by students
         return jsonify(message="Welcome to the student dashboard!")
     else:
@@ -117,6 +118,7 @@ def student_dashboard():
 # @login_required
 def teacher_dashboard():
     if current_user.role == 'teacher':
+        
         # Only accessible by teachers
         return jsonify(message="Welcome to the teacher dashboard!"),200
     else:

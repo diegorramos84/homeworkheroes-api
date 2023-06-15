@@ -4,7 +4,8 @@ import os
 import jwt
 from dotenv import load_dotenv
 
-from ..students.models import Student, Teacher
+from ..students.models import Student
+from ..teachers.models import Teacher
 
 load_dotenv()
 
