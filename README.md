@@ -55,11 +55,11 @@ Available endpoints:
 
 | Method | URL | Description |
 |:-------------:|:-------------:|:-----:|
-| `GET` | `/assignment` | list all assignments available |
-| `POST` | `/assignment` | create a new assignments to a student using a specific homework |
-| `GET` | `/assignment/id` | get a assigment by its ID |
-| `PATCH` | `/assignment/id` | update a specific assignment (only deadline if available) |
-| `DELETE` | `/assignment/id` | delete a specific assigment |
+| `GET` | `/assignments` | list all assignments available |
+| `POST` | `/assignments` | create a new assignments to a student using a specific homework |
+| `GET` | `/assignments/id` | get a assigment by its ID |
+| `PATCH` | `/assignments/id` | update a specific assignment (only deadline if available) |
+| `DELETE` | `/assignments/id` | delete a specific assigment |
 
 
 ## Contributing
