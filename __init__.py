@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_cors import CORS
 
 from .config import config
 
@@ -9,9 +10,13 @@ migrate = Migrate()
 
 def create_app(config_mode):
     app = Flask(__name__)
+    CORS(app)
     app.config.from_object(config[config_mode])
 
-    # from .books import models
+    from .students import models
+    from .homework import models
+    from .teachers import models
+    from .assignments import models
 
     db.init_app(app)
     migrate.init_app(app, db)
