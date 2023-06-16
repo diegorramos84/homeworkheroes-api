@@ -59,7 +59,7 @@ Available endpoints:
 
 | Method | URL | Description |
 |:-------------:|:-------------:|:-----:|
-| `POST` | `/register` | create a new teacher |
+| `POST` | `/teachers/register` | create a new teacher |
 | `POST` | `/login` | login as a teacher |
 | `POST` | `/logout` | logout teacher |
 
