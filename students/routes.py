@@ -18,7 +18,7 @@ def get_all_students_route():
 def student(id):
     if request.method == 'DELETE': return delete_student(id)
     if request.method == 'GET': return get_student(id)
-   
+
 
 
 # @desc    Register a new user
@@ -99,16 +99,16 @@ def register_teacher_route():
 def profile(id):
     if request.method == 'GET': return get_student_profile(id)
     if request.method == 'PUT': return update_student_profile(id)
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
 # # Protected route accessible by students
 # @app.route('/students/dashboard',methods=['GET','POST'])
 # # @protect(['student'])
@@ -116,7 +116,7 @@ def profile(id):
 # # @jwt_required()
 # def student_dashboard():
 #     if current_user.role == 'student':
-        
+
 #         # Only accessible by students
 #         return jsonify(message="Welcome to the student dashboard!")
 #     else:
@@ -128,7 +128,7 @@ def profile(id):
 # # @login_required
 # def teacher_dashboard():
 #     if current_user.role == 'teacher':
-        
+
 #         # Only accessible by teachers
 #         return jsonify(message="Welcome to the teacher dashboard!"),200
 #     else:

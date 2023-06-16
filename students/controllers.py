@@ -1,6 +1,6 @@
 
 from flask import request, jsonify, make_response
-from flask_login import login_user, logout_user, current_user, login_required, LoginManager
+from flask_login import login_user, logout_user, current_user, login_required
 from flask_jwt_extended import create_access_token, unset_jwt_cookies, unset_jwt_cookies, JWTManager,set_access_cookies
 from flask_bcrypt import Bcrypt
 from .. import db, login_manager,app
@@ -9,7 +9,6 @@ from ..students.models import Student
 from ..teachers.models import Teacher
 
 bcrypt = Bcrypt()
-# login_manager = LoginManager(app)
 jwt = JWTManager()
 
 @login_manager.user_loader
@@ -33,27 +32,40 @@ def format_student(student):
     }
 
 def get_all_students():
-    if request.method == 'GET':
-        students = Student.query.all()
-        students_list = []
-        assignment_list= []
-        for student in students:
-            assignments = student.assignments
-            for a in assignments:
-                assignment = {
-                "completed": a.completed,
-                "subject": a.homework.subject,
-                "content": a.homework.content,
-                "deadline": a.deadline,
-                "student_feedback": a.student_feedback,
-                "teacher_feedback": a.teacher_feedback,
-                "extra-resources": a.homework.extra_resources,
-                "teacher_id": a.homework.teacher_id,
-                "teacher_name": a.homework.teacher.name
+    students = Student.query.all()
+    students_list = []
+    assignment_list= []
+    for student in students:
+        assignments = student.assignments
+        for a in assignments:
+            print('ass', a)
+            assignment = {
+            "completed": a.completed,
+            "subject": a.homework.subject,
+            "content": a.homework.content,
+            "deadline": a.deadline,
+            "student_feedback": a.student_feedback,
+            "teacher_feedback": a.teacher_feedback,
+            "extra-resources": a.homework.extra_resources,
+            "teacher_id": a.homework.teacher_id,
+            "teacher_name": a.homework.teacher.name
+        }
+            assignment_list.append(assignment)
+
+            student_data = {
+                'id': student.id,
+                'name': student.name,
+                'email': student.email,
+                "school": student.school,
+                "school_class": student.school_class,
+                "superpower": student.superpower,
+                "date_of_birth": student.date_of_birth,
+                "level": student.level,
+                'role': student.role,
+                'assignments': assignment_list,
+                "avatar": student.avatar
             }
-                assignment_list.append(assignment)
-                student.assignments = assignment_list
-                students_list.append(format_student(student))
+            students_list.append((student_data))
 
         return jsonify(students_list)
 
@@ -83,10 +95,15 @@ def get_student(id):
             'id': student.id,
             'name': student.name,
             'email': student.email,
+            "school": student.school,
+            "school_class": student.school_class,
+            "superpower": student.superpower,
+            "date_of_birth": student.date_of_birth,
+            "level": student.level,
             'role': student.role,
-            'assignments': assignment_list
+            'assignments': assignment_list,
+            "avatar": student.avatar
         }
-
         return jsonify(student_data)
 
     return jsonify(message='Student not found'), 404
