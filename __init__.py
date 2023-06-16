@@ -1,9 +1,12 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-
 from flask_login import LoginManager
 from flask_jwt_extended import JWTManager
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 from flask_cors import CORS
 
@@ -18,8 +21,9 @@ def create_app(config_mode):
     app = Flask(__name__)
     CORS(app)
     app.config.from_object(config[config_mode])
-    # TODO need to hide this
-    app.config['JWT_SECRET_KEY'] = 'abc123'
+
+    app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
+
 
     from .students import models
     from .homework import models

@@ -56,65 +56,37 @@ def get_all_students():
 
         return jsonify(students_list)
 
-# Get student by ID
-def get_all_students():
-    if request.method == 'GET':
-        students = Student.query.all()
-        students_list = []
-        for student in students:
-            assignments = student.assignments
-            assignment_list = []
-            for a in assignments:
-                assignment = {
-                    "completed": a.completed,
-                    "subject": a.homework.subject,
-                    "content": a.homework.content,
-                    "deadline": a.deadline,
-                    "feedback": a.feedback,
-                    "extra-resources": a.homework.extra_resources,
-                    "teacher_id": a.homework.teacher_id,
-                    "teacher_name": a.homework.teacher.name
-                }
-                assignment_list.append(assignment)
-
-            student_data = {
-                'id': student.id,
-                'name': student.name,
-                'email': student.email,
-                'role': student.role,
-                'assignments': assignment_list
-            }
-            students_list.append(student_data)
-
-        return jsonify(students_list)
+    
+# Get student by ID    
 def get_student(id):
     student = Student.query.get(id)
     if student:
-        assignment_list= []
+        assignment_list = []
         assignments = student.assignments
         print(assignments)
         for a in assignments:
             assignment = {
-            "completed": a.completed,
-            "subject": a.homework.subject,
-            "content": a.homework.content,
-            "deadline": a.deadline,
-            "feedback": a.feedback,
-            "extra-resources": a.homework.extra_resources,
-            "teacher_id": a.homework.teacher_id,
-            "teacher_name": a.homework.teacher.name
+                "completed": a.completed,
+                "subject": a.homework.subject,
+                "content": a.homework.content,
+                "deadline": a.deadline,
+                "feedback": a.feedback,
+                "extra-resources": a.homework.extra_resources,
+                "teacher_id": a.homework.teacher_id,
+                "teacher_name": a.homework.teacher.name
             }
             assignment_list.append(assignment)
-            
-            student_data = {
-                'id': student.id,
-                'name': student.name,
-                'email': student.email,
-                'role': student.role,
-                'assignments': assignment_list
-            }
-           
+        
+        student_data = {
+            'id': student.id,
+            'name': student.name,
+            'email': student.email,
+            'role': student.role,
+            'assignments': assignment_list
+        }
+        
         return jsonify(student_data)
+    
     return jsonify(message='Student not found'), 404
 
 
@@ -229,32 +201,6 @@ def login():
         return jsonify(message="An error occurred"), 500
 
 
-# def login():
-#     try:
-#         data = request.get_json()
-#         email = data.get("email")
-#         password = data.get('password')
-
-#         if not email or not password:
-#             return jsonify(message="Email and password are requires"), 400
-
-#         student = Student.query.filter_by(email=email).first()
-#         if not student or not bcrypt.check_password_hash(student.password, password):
-#             return jsonify(message="Invalid email or password"), 401
-
-#         login_user(student)
-
-#         access_token = create_access_token(identity=student.id)
-
-#         response = make_response(
-#             jsonify(access_token=access_token, name=student.name, email=student.email))
-#         response.set_cookie('access_token', access_token)
-
-#         return response, 200
-
-#     except Exception as e:
-#         return (str(e))
-
 
 def logout():
     try:
@@ -270,26 +216,26 @@ def logout():
     except Exception as e:
         return (str(e))
 
+@login_required
+def get_student_profile(id):
+    # Assuming the student ID is passed in the request headers
+    # student_id = request.headers.get('student_id')
+    # Fetch student from the database based on the user ID
+    student = Student.query.get(id)
+    print(student)
 
-# @login_required
-# def get_student_profile(id):
-#     # Assuming the student ID is passed in the request headers
-#     # student_id = request.headers.get('student_id')
-#     # Fetch student from the database based on the user ID
-#     student = Student.query.get(id)
-#     print(student)
+    if student:
+        return jsonify({
+            '_id': student.id,
+            'name': student.name,
+            'email': student.email,
+            'avatar': student.avatar
+        })
+    else:
+        return jsonify(error='Student not found'), 404
 
-#     if student:
-#         return jsonify({
-#             '_id': student.id,
-#             'name': student.name,
-#             'email': student.email,
-#             'avatar': student.avatar
-#         })
-#     else:
-#         return jsonify(error='Student not found'), 404
-
-
+import bcrypt
+bcrypt = Bcrypt()
 def update_student_profile(id):
     # Assuming the student ID is passed in the request headers
     # student_id = request.headers.get('student_id')
@@ -299,12 +245,14 @@ def update_student_profile(id):
     if student:
         student.name = request.json.get('name', student.name)
         student.email = request.json.get('email', student.email)
-        student.avatar = request.json.get(
-            'avatar', student.avatar)  # Assign the avatar field
+        student.avatar = request.json.get('avatar', student.avatar)  
 
         password = request.json.get('password')
         if password:
-            student.password = password
+             # Generate the salted password hash
+            hashed_password = bcrypt.generate_password_hash(
+                password).decode('utf-8')
+            student.password = hashed_password
 
         db.session.commit()
 
@@ -318,11 +266,10 @@ def update_student_profile(id):
         return jsonify(error='Student not found'), 404
 
 
+
 # TEACHERS
 
 # @app.route('/register', methods=['POST'])
-bcrypt = Bcrypt()
-
 # Register controller for creating a new teacher
 def register_teacher(name, email, school, school_class, role, password):
     # Check if the email already exists in the database
@@ -330,7 +277,8 @@ def register_teacher(name, email, school, school_class, role, password):
         return jsonify(message="Email already exists"), 409
 
     # Hash the password
-    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+    hashed_password = bcrypt.generate_password_hash(
+                password).decode('utf-8')
 
     # Create a new teacher instance
     teacher = Teacher(
@@ -347,6 +295,23 @@ def register_teacher(name, email, school, school_class, role, password):
     db.session.commit()
 
     return jsonify(message="Teacher registered successfully"), 201
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
