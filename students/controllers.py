@@ -29,7 +29,7 @@ def format_student(student):
         "date_of_birth": student.date_of_birth,
         "level": student.level,
         "assignments": student.assignments,
-        "avatar": student.avatar  
+        "avatar": student.avatar
     }
 
 def get_all_students():
@@ -45,7 +45,8 @@ def get_all_students():
                 "subject": a.homework.subject,
                 "content": a.homework.content,
                 "deadline": a.deadline,
-                "feedback": a.feedback,
+                "student_feedback": a.student_feedback,
+                "teacher_feedback": a.teacher_feedback,
                 "extra-resources": a.homework.extra_resources,
                 "teacher_id": a.homework.teacher_id,
                 "teacher_name": a.homework.teacher.name
@@ -56,8 +57,8 @@ def get_all_students():
 
         return jsonify(students_list)
 
-    
-# Get student by ID    
+
+# Get student by ID
 def get_student(id):
     student = Student.query.get(id)
     if student:
@@ -70,13 +71,14 @@ def get_student(id):
                 "subject": a.homework.subject,
                 "content": a.homework.content,
                 "deadline": a.deadline,
-                "feedback": a.feedback,
+                "student_feedback": a.student_feedback,
+                "teacher_feedback": a.teacher_feedback,
                 "extra-resources": a.homework.extra_resources,
                 "teacher_id": a.homework.teacher_id,
                 "teacher_name": a.homework.teacher.name
             }
             assignment_list.append(assignment)
-        
+
         student_data = {
             'id': student.id,
             'name': student.name,
@@ -84,9 +86,9 @@ def get_student(id):
             'role': student.role,
             'assignments': assignment_list
         }
-        
+
         return jsonify(student_data)
-    
+
     return jsonify(message='Student not found'), 404
 
 
@@ -113,7 +115,7 @@ def register_student():
             level = data.get('level')
             password = data.get('password')
             avatar = data.get('avatar')
-          
+
 
         if not name or not email or not password or not school or not school_class or not superpower or not date_of_birth or not level:
             return jsonify(message="There are some missing field's, all fields are required"), 400
@@ -164,9 +166,9 @@ def login():
 
             student = Student.query.filter_by(email=email).first()
             teacher = Teacher.query.filter_by(email=email).first()
-            
+
             print("teacher:", teacher)
-            
+
             if student and bcrypt.check_password_hash(student.password, password):
                 login_user(student)
                 access_token = create_access_token(identity=student.id)
@@ -245,7 +247,7 @@ def update_student_profile(id):
     if student:
         student.name = request.json.get('name', student.name)
         student.email = request.json.get('email', student.email)
-        student.avatar = request.json.get('avatar', student.avatar)  
+        student.avatar = request.json.get('avatar', student.avatar)
 
         password = request.json.get('password')
         if password:
@@ -295,24 +297,3 @@ def register_teacher(name, email, school, school_class, role, password):
     db.session.commit()
 
     return jsonify(message="Teacher registered successfully"), 201
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
