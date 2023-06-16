@@ -304,6 +304,12 @@ def register_teacher(name, email, school, school_class, role, password):
 
 
 
+
+
+
+
+
+
 # def login():
 #     try:
 #         data = request.get_json()
