@@ -14,7 +14,7 @@ class Student(db.Model, UserMixin):
     superpower = db.Column(db.String(50))
     date_of_birth = db.Column(db.DateTime, nullable=False)
     level = db.Column(db.Integer)
-    password = db.Column(db.String(80), nullable=False)
+    password = db.Column(db.String(130), nullable=False)
     assignments = db.relationship("Assignment", backref="assignment_student")
     avatar = db.Column(db.String(200))  # Image path or URL column
     date_created = db.Column(db.DateTime(timezone=True), default=func.now())

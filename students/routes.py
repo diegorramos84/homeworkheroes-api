@@ -90,32 +90,6 @@ def register_teacher_route():
 
     return response
 
-# Protected route accessible by students
-@app.route('/students/dashboard',methods=['GET','POST'])
-# @protect(['student'])
-@login_required
-# @jwt_required()
-def student_dashboard():
-    if current_user.role == 'student':
-        
-        # Only accessible by students
-        return jsonify(message="Welcome to the student dashboard!")
-    else:
-        return jsonify(message="Access denied")
-
-# Protected route accessible by teachers
-@app.route('/teachers/dashboard',methods=['GET','POST'])
-@protect(['teacher'])
-# @login_required
-def teacher_dashboard():
-    if current_user.role == 'teacher':
-        
-        # Only accessible by teachers
-        return jsonify(message="Welcome to the teacher dashboard!"),200
-    else:
-        return jsonify(message="Access denied"), 401
-
-
 
 #  @desc    Get user profile AND Update user profile
 #  @route   GET /students/profile
@@ -125,3 +99,37 @@ def teacher_dashboard():
 def profile(id):
     if request.method == 'GET': return get_student_profile(id)
     if request.method == 'PUT': return update_student_profile(id)
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+# # Protected route accessible by students
+# @app.route('/students/dashboard',methods=['GET','POST'])
+# # @protect(['student'])
+# @login_required
+# # @jwt_required()
+# def student_dashboard():
+#     if current_user.role == 'student':
+        
+#         # Only accessible by students
+#         return jsonify(message="Welcome to the student dashboard!")
+#     else:
+#         return jsonify(message="Access denied")
+
+# # Protected route accessible by teachers
+# @app.route('/teachers/dashboard',methods=['GET','POST'])
+# @protect(['teacher'])
+# # @login_required
+# def teacher_dashboard():
+#     if current_user.role == 'teacher':
+        
+#         # Only accessible by teachers
+#         return jsonify(message="Welcome to the teacher dashboard!"),200
+#     else:
+#         return jsonify(message="Access denied"), 401
