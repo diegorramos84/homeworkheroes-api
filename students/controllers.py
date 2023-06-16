@@ -41,6 +41,7 @@ def get_all_students():
             print('ass', a)
             assignment = {
             "completed": a.completed,
+            "homework_name": a.homework.homework_name,
             "subject": a.homework.subject,
             "content": a.homework.content,
             "deadline": a.deadline,
@@ -80,6 +81,7 @@ def get_student(id):
         for a in assignments:
             assignment = {
                 "completed": a.completed,
+                "homework_name": a.homework.homework_name,
                 "subject": a.homework.subject,
                 "content": a.homework.content,
                 "deadline": a.deadline,

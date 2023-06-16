@@ -9,6 +9,7 @@ def get_all_homeworks():
     for h in homework:
         hw = {
             "id": h.id,
+            "homework_name": h.homework_name,
             "subject": h.subject,
             "content": h.content,
             "extra_resources": h.extra_resources,
@@ -23,6 +24,7 @@ def get_one_homework(id):
     homework = Homework.query.get(id)
 
     hw = {
+            "homework_name": homework.homework_name,
             "subject": homework.subject,
             "content": homework.content,
             "extra_resources": homework.extra_resources,
@@ -36,6 +38,7 @@ def create_homework():
     data = request.json
 
     new_hw = Homework(
+        homework_name = data['homework_name'],
         subject = data['subject'],
         content = data['content'],
         extra_resources = data['extra_resources'] if 'extra_resources' in data else "",
@@ -44,12 +47,15 @@ def create_homework():
     db.session.add(new_hw)
     db.session.commit()
 
-    return jsonify(id=new_hw.id, subject=new_hw.subject, content=new_hw.content, extra_resources=new_hw.extra_resources, teacher_id=new_hw.teacher_id)
+    return jsonify(id=new_hw.id, homework_name=new_hw.homework_name, subject=new_hw.subject, content=new_hw.content, extra_resources=new_hw.extra_resources, teacher_id=new_hw.teacher_id)
 
 def update_homework(id):
     homework = Homework.query.get(id)
     data = request.json
 
+    if 'homework_name' in data:
+        homework.homework_name = data['homework_name']
+        db.session.commit()
     if 'subject' in data:
         homework.subject = data['subject']
         db.session.commit()
@@ -60,7 +66,7 @@ def update_homework(id):
         homework.extra_resources = data['extra_resources']
         db.session.commit()
 
-    return jsonify(id=homework.id, content=homework.content, subject = homework.subject, extra_resources=homework.extra_resources, teacher_id=homework.teacher_id)
+    return jsonify(id=homework.id, homework_name=homework.homework_name, content=homework.content, subject = homework.subject, extra_resources=homework.extra_resources, teacher_id=homework.teacher_id)
 
 def delete_homework(id):
     homework = Homework.query.get(id)
