@@ -71,7 +71,7 @@ Available endpoints:
     "subject": "This is a subject",
     "content": "I am content",
     "extra_resources": "www.youtube.com", -> this field is optional
-    "teacher_id: 1
+    "teacher_id": 1
   }
 ```
 
