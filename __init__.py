@@ -21,7 +21,9 @@ def create_app(config_mode):
     app = Flask(__name__)
     CORS(app)
     app.config.from_object(config[config_mode])
+
     app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
+
 
     from .students import models
     from .homework import models
