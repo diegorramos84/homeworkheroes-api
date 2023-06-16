@@ -11,7 +11,8 @@ def get_all_assignments():
             "id": a.id,
             "date": a.date,
             "deadline": a.deadline,
-            "feedback": a.feedback,
+            "student_feedback": a.student_feedback,
+            "teacher_feedback": a.teacher_feedback,
             "completed": a.completed,
             "student": a.student.name,
             "student_id": a.student_id,
@@ -58,7 +59,7 @@ def create_assignment():
     db.session.add(new_ass)
     db.session.commit()
 
-    return jsonify(id=new_ass.id, deadline=new_ass.deadline, student_id=new_ass.student_id, homework_id=new_ass.homework_id)
+    return jsonify(id=new_ass.id, deadline=new_ass.deadline, student_id=new_ass.student_id, homework_id=new_ass.homework_id, completed=new_ass.completed)
 
 def update_assignment(id):
     assignment = Assignment.query.get(id)
@@ -68,8 +69,20 @@ def update_assignment(id):
         assignment.deadline = data['deadline']
         db.session.commit()
 
+    if 'completed' in data:
+        assignment.completed = data['completed']
+        db.session.commit()
 
-    return jsonify(id= assignment.id, deadline=assignment.deadline)
+    if 'student_feedback' in data:
+        assignment.student_feedback = data['student_feedback']
+        db.session.commit()
+
+    if 'teacher_feedback' in data:
+        assignment.teacher_feedback= data['teacher_feedback']
+        db.session.commit()
+
+    return jsonify(id= assignment.id, teacher_feedback=assignment.teacher_feedback, student_feedback=assignment.student_feedback, deadline=assignment.deadline, completed= assignment.completed)
+
 
 def delete_assignment(id):
     assignment = Assignment.query.get(id)
