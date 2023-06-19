@@ -17,6 +17,7 @@ migrate = Migrate()
 login_manager = LoginManager()
 jwt =JWTManager()
 
+
 def create_app(config_mode):
     app = Flask(__name__)
     CORS(app)
