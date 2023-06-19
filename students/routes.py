@@ -18,6 +18,7 @@ def get_all_students_route():
 def student(id):
     if request.method == 'DELETE': return delete_student(id)
     if request.method == 'GET': return get_student(id)
+    
 
 
 
@@ -94,13 +95,16 @@ def register_teacher_route():
 #  @desc    Get user profile AND Update user profile
 #  @route   GET /students/profile
 #  @access  Private
-@app.route('/student/profile/<id>', methods=['GET','PUT'])
+@app.route('/student/profile/<id>', methods=['GET','POST'])
 
 def profile(id):
-    if request.method == 'GET': return get_student_profile(id)
-    if request.method == 'PUT': return update_student_profile(id)
+    if request.method == 'DELETE': return delete_student(id)
+    if request.method == 'GET': return get_student(id)
+ 
 
-
+@app.route('/student/profile/<id>', methods=['PATCH'])
+def update_student_profile_route(id):
+    return update_student_profile(id)
 
 
 

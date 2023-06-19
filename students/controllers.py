@@ -203,7 +203,12 @@ def login():
                     id=student.id,
                     name=student.name,
                     email=student.email,
-                    role=student.role
+                    role=student.role,
+                    school=student.school,
+                    school_class=student.school_class,
+                    level=student.level,
+                    avatar=student.avatar
+                    
                 ))
                 set_access_cookies(response, access_token)
                 return response, 200
@@ -217,7 +222,11 @@ def login():
                     id=teacher.id,
                     name=teacher.name,
                     email=teacher.email,
-                    role=teacher.role
+                    role=teacher.role,
+                    school=student.school,
+                    school_class=student.school_class,
+                    level=student.level,
+                    avatar=student.avatar
                 ))
                 set_access_cookies(response, access_token)
                 print('response:', response)
@@ -228,21 +237,23 @@ def login():
     except Exception as e:
         return jsonify(message="An error occurred"), 500
 
-
-
 def logout():
-    try:
-        if current_user.is_authenticated:
-           # logout student
-            logout_user()
-            # clear token
-            response = make_response(
-                jsonify(message="user logged out successfully"))
-            unset_jwt_cookies(response)
-            return response
+    logout_user()
+    return make_response(jsonify(message="user logged out successfully"),)
 
-    except Exception as e:
-        return (str(e))
+# def logout():
+#     try:
+#         if current_user.is_authenticated:
+#            # logout student
+#             logout_user()
+#             # clear token
+#             response = make_response(
+#                 jsonify(message="user logged out successfully"))
+#             unset_jwt_cookies(response)
+#             return response
+
+#     except Exception as e:
+#         return (str(e))
 
 @login_required
 def get_student_profile(id):
@@ -264,12 +275,43 @@ def get_student_profile(id):
 
 import bcrypt
 bcrypt = Bcrypt()
+
+# def update_student_profile(id):
+#     student_id = request.json.get('student.id')
+#     name = request.json.get('name')
+#     email = request.json.get('email')
+#     password = request.json.get('password')
+
+#     print(request.json.get('data'))
+#     if not student_id:
+#         return jsonify({'error': 'Missing student_id'}), 400
+
+#     student = Student.query.filter_by(id).first()
+
+#     if student:
+#         student.name = name or student.name
+#         student.email = email or student.email
+
+#         if password:
+#             student.set_password(password)
+
+#         db.session.commit()
+
+#         return jsonify({
+#             '_id': student.id,
+#             'name': student.name,
+#             'email': student.email
+#         })
+#     else:
+#         return jsonify({'error': 'Student not found'}), 404
+
+
 def update_student_profile(id):
     # Assuming the student ID is passed in the request headers
     # student_id = request.headers.get('student_id')
     # Fetch student from the database based on the student ID
     student = Student.query.get(id)
-
+    print(student)
     if student:
         student.name = request.json.get('name', student.name)
         student.email = request.json.get('email', student.email)
@@ -281,14 +323,13 @@ def update_student_profile(id):
             hashed_password = bcrypt.generate_password_hash(
                 password).decode('utf-8')
             student.password = hashed_password
-
         db.session.commit()
 
         return jsonify({
-            '_id': student.id,
+            'id': student.id,
             'name': student.name,
             'email': student.email,
-            'avatar': student.avatar  # Include avatar field in the response
+            'avatar': student.avatar 
         })
     else:
         return jsonify(error='Student not found'), 404
