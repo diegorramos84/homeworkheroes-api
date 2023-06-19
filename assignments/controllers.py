@@ -53,11 +53,12 @@ def get_one_assignment(id):
 
 def create_assignment():
     data = request.json
+    print('data', data)
 
     new_ass = Assignment(
         deadline = data['deadline'],
-        student_id = data['student_id'],
-        homework_id = data['homework_id']
+        student_id = int(data['student_id']),
+        homework_id = int(data['homework_id'])
     )
     db.session.add(new_ass)
     db.session.commit()
