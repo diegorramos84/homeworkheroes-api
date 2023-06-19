@@ -4,6 +4,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 from flask_jwt_extended import create_access_token, unset_jwt_cookies, unset_jwt_cookies, JWTManager,set_access_cookies
 from flask_bcrypt import Bcrypt
 from .. import db, login_manager,app
+from sqlalchemy import text
 
 from ..students.models import Student
 from ..teachers.models import Teacher
@@ -32,43 +33,46 @@ def format_student(student):
     }
 
 def get_all_students():
-    students = Student.query.all()
+    students = Student.query.distinct().all()
+    students = list(set(students))
+    print ('STUDENTS', students)
     students_list = []
     assignment_list= []
     for student in students:
-        assignments = student.assignments
-        for a in assignments:
-            print('ass', a)
-            assignment = {
-            "completed": a.completed,
-            "homework_name": a.homework.homework_name,
-            "subject": a.homework.subject,
-            "content": a.homework.content,
-            "deadline": a.deadline,
-            "student_feedback": a.student_feedback,
-            "teacher_feedback": a.teacher_feedback,
-            "extra-resources": a.homework.extra_resources,
-            "teacher_id": a.homework.teacher_id,
-            "teacher_name": a.homework.teacher.name
-        }
-            assignment_list.append(assignment)
-
-            student_data = {
-                'id': student.id,
-                'name': student.name,
-                'email': student.email,
-                "school": student.school,
-                "school_class": student.school_class,
-                "superpower": student.superpower,
-                "date_of_birth": student.date_of_birth,
-                "level": student.level,
-                'role': student.role,
-                'assignments': assignment_list,
-                "avatar": student.avatar
+        print('student', student)
+        if student.assignments:
+            assignments = student.assignments
+            for a in assignments:
+                assignment = {
+                "completed": a.completed,
+                "homework_name": a.homework.homework_name,
+                "homework_id": a.homework.id,
+                "subject": a.homework.subject,
+                "content": a.homework.content,
+                "deadline": a.deadline,
+                "student_feedback": a.student_feedback,
+                "teacher_feedback": a.teacher_feedback,
+                "extra-resources": a.homework.extra_resources,
+                "teacher_id": a.homework.teacher_id,
+                "teacher_name": a.homework.teacher.name
             }
-            students_list.append((student_data))
+            assignment_list.append(assignment)
+        student_data = {
+            'id': student.id,
+            'name': student.name,
+            'email': student.email,
+            "school": student.school,
+            "school_class": student.school_class,
+            "superpower": student.superpower,
+            "date_of_birth": student.date_of_birth,
+            "level": student.level,
+            'role': student.role,
+            'assignments': assignment_list,
+            "avatar": student.avatar
+        }
+        students_list.append(student_data)
 
-        return jsonify(students_list)
+    return jsonify(students_list)
 
 
 # Get student by ID
@@ -82,6 +86,7 @@ def get_student(id):
             assignment = {
                 "completed": a.completed,
                 "homework_name": a.homework.homework_name,
+                "homework_id": a.homework.id,
                 "subject": a.homework.subject,
                 "content": a.homework.content,
                 "deadline": a.deadline,
