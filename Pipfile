@@ -6,7 +6,6 @@ name = "pypi"
 [packages]
 flask = "*"
 flask-cors = "*"
-flask-sqlalchemy = "*"
 python-dotenv = "*"
 flask-migrate = "*"
 psycopg2 = "*"
@@ -15,6 +14,9 @@ bcrypt = "*"
 flask-bcrypt = "*"
 flask-login = "*"
 pyjwt = "*"
+pytest = "*"
+flask-sqlalchemy = "*"
+pytest-cov = "*"
 
 [dev-packages]
 
@@ -23,3 +25,5 @@ python_version = "3.10"
 
 [scripts]
 dev="flask run"
+test = "pytest ."
+coverage = "pytest --cov-report term-missing --cov=."
