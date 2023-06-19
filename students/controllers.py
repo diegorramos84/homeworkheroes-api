@@ -4,7 +4,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 from flask_jwt_extended import create_access_token, unset_jwt_cookies, unset_jwt_cookies, JWTManager,set_access_cookies
 from flask_bcrypt import Bcrypt
 from .. import db, login_manager,app
-from sqlalchemy import text
+from sqlalchemy.orm import joinedload
 
 from ..students.models import Student
 from ..teachers.models import Teacher
@@ -33,9 +33,10 @@ def format_student(student):
     }
 
 def get_all_students():
-    students = Student.query.distinct().all()
-    students = list(set(students))
-    print ('STUDENTS', students)
+    # students = Student.query.distinct().all()
+    # students = list(set(students))
+    students = Student.query.options(joinedload(Student.assignments)).all()
+    print('HERE!!!!!!!!!!!!!', students)
     students_list = []
     assignment_list= []
     for student in students:
@@ -44,6 +45,7 @@ def get_all_students():
             assignments = student.assignments
             for a in assignments:
                 assignment = {
+                "assignment_id": a.id,
                 "completed": a.completed,
                 "homework_name": a.homework.homework_name,
                 "homework_id": a.homework.id,
@@ -81,9 +83,9 @@ def get_student(id):
     if student:
         assignment_list = []
         assignments = student.assignments
-        print(assignments)
         for a in assignments:
             assignment = {
+                "assignment_id": a.id,
                 "completed": a.completed,
                 "homework_name": a.homework.homework_name,
                 "homework_id": a.homework.id,
