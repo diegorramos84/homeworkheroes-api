@@ -261,11 +261,11 @@ def get_student_profile(id):
     # student_id = request.headers.get('student_id')
     # Fetch student from the database based on the user ID
     student = Student.query.get(id)
-    print(student)
+    # print(student)
 
     if student:
         return jsonify({
-            '_id': student.id,
+            'id': student.id,
             'name': student.name,
             'email': student.email,
             'avatar': student.avatar
@@ -313,23 +313,27 @@ def update_student_profile(id):
     student = Student.query.get(id)
     print(student)
     if student:
+        student.id = request.json.get('id', student.id)
         student.name = request.json.get('name', student.name)
         student.email = request.json.get('email', student.email)
         student.avatar = request.json.get('avatar', student.avatar)
-
-        password = request.json.get('password')
-        if password:
-             # Generate the salted password hash
-            hashed_password = bcrypt.generate_password_hash(
-                password).decode('utf-8')
-            student.password = hashed_password
-        db.session.commit()
-
+        student.school = request.json.get('school', student.school)
+        
+        if 'password' in request.json:
+            password = request.json.get('password')
+            if password:
+                # Generate the salted password hash
+                hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+                student.password = hashed_password
+                db.session.commit()
+            
         return jsonify({
             'id': student.id,
             'name': student.name,
             'email': student.email,
-            'avatar': student.avatar 
+            'avatar': student.avatar,
+            'school': student.school,
+            'password': student.password,
         })
     else:
         return jsonify(error='Student not found'), 404
@@ -364,3 +368,5 @@ def register_teacher(name, email, school, school_class, role, password):
     db.session.commit()
 
     return jsonify(message="Teacher registered successfully"), 201
+
+
