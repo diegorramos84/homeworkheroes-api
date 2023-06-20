@@ -4,7 +4,7 @@ from flask_login import login_required, current_user
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from ..app import app
 from .controllers import register_student, login , logout, get_all_students,delete_student,get_student,  update_student_profile ,register_teacher,get_student_profile
-from ..middleware.protected_route import protect
+
 
 
 # @desc    Auth user & get token

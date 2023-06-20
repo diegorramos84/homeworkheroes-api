@@ -1,4 +1,3 @@
-
 from flask import request, jsonify, make_response
 from flask_login import login_user, logout_user, current_user, login_required
 from flask_jwt_extended import create_access_token, unset_jwt_cookies, unset_jwt_cookies, JWTManager,set_access_cookies
@@ -368,5 +367,8 @@ def register_teacher(name, email, school, school_class, role, password):
     db.session.commit()
 
     return jsonify(message="Teacher registered successfully"), 201
+
+
+
 
 

@@ -24,6 +24,7 @@ def get_one_homework(id):
     homework = Homework.query.get(id)
 
     hw = {
+            "id": homework.id,
             "homework_name": homework.homework_name,
             "subject": homework.subject,
             "content": homework.content,
