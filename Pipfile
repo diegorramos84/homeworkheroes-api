@@ -17,6 +17,7 @@ pyjwt = "*"
 pytest = "*"
 flask-sqlalchemy = "*"
 pytest-cov = "*"
+colorama = "*"
 
 [dev-packages]
 

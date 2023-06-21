@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from flask_cors import CORS
+  # Enable CORS for specific routes
 
 from .config import config
 
@@ -25,6 +26,7 @@ def create_app(config_mode):
 
     app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
 
+    cors = CORS(app, resources={r"/student/profile/*": {"origins": "http://localhost:5173"}})  # Enable CORS for specific routes
 
     from .students import models
     from .homework import models
