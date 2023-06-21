@@ -317,6 +317,7 @@ def update_student_profile(id):
         student.email = request.json.get('email', student.email)
         student.avatar = request.json.get('avatar', student.avatar)
         student.school = request.json.get('school', student.school)
+        student.level = request.json.get('level', student.level)
         
         if 'password' in request.json:
             password = request.json.get('password')
@@ -332,6 +333,7 @@ def update_student_profile(id):
             'email': student.email,
             'avatar': student.avatar,
             'school': student.school,
+            'level': student.level,
             'password': student.password,
         })
     else:
