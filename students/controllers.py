@@ -167,7 +167,7 @@ def register_student():
                 date_of_birth=date_of_birth,
                 level=level,
                 password=hashed_password,
-                avatar=avatar  # Assign the avatar field
+                avatar=avatar  
             )
 
         db.session.add(new_student)
@@ -231,7 +231,7 @@ def login():
                 print('response:', response)
                 return response, 200
 
-            return jsonify(message="Invalid email or password"), 401
+            return jsonify(message=" UNAUTHORIZED"), 401
 
     except Exception as e:
         return jsonify(message="An error occurred"), 500

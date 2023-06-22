@@ -11,41 +11,40 @@ import datetime
 
   
 
-def test_register_student():
-    with app.test_client() as client:
-        with app.app_context():
-            data={
-            "name": "John Smith",
-            "email": "johnsmith@test.com",
-            "school": "Test School",
-            "school_class": "Class 1",
-            "superpower": "Tester",
-            "date_of_birth": "1980/09/23",
-            "level": 0,
-            "password": "123456",
-            "avatar": "",
-        }
-            headers = {"Content-Type": "application/json"}
+def test_register_student(client):
+    data = {
+        "name": "test",
+        "email": "testing_testing1@test.com",
+        "school": "school of test",
+        "school_class": "class test",
+        "superpower": "Tester",
+        "date_of_birth": "19800923",
+        "level": "1",
+        "password": "123456",
+        "avatar": "/@fs/C:/Users/avnip/Desktop/homework_frontend/Homework-Heroes/src/assets/images/superhero2.png",
+        "role": "student"
+    }
+    expected_response = {"message": "Student Created"}
 
-            response = client.post('/register', data=json.dumps(data), headers=headers)
-            assert response.status_code == 201
-            assert response.json == {"message": "Student Created"}
-            
-            new_student = Student.query.filter_by(email="johnsmith@test.com").first()
-            assert new_student is not None
-            assert new_student.name == "John Smith"
-            assert new_student.email == "johnsmith@test.com"
-            assert new_student.school == "Test School"
-            assert new_student.school_class == "Class 1"
-            assert new_student.superpower == "Tester"
-            assert new_student.date_of_birth == "1980/09/23"
-            assert new_student.level == 0
-            assert new_student.password != "123456" 
-            assert new_student.avatar == ""
+    response = client.post('/register', json=data)
+    assert response.status_code == 201  
+    assert response.get_json() == expected_response
 
-        # # Clean up the new_student from the database (optional)
-            # db.session.delete(new_student)
-            # db.session.commit()
+
+  # Retrieve the created student from the database
+    new_student = Student.query.filter_by(email="testing_testing1@test.com").first()
+
+    # Delete the student from the database
+    db.session.delete(new_student)
+    db.session.commit()
+
+    # Check if the student is successfully deleted
+    deleted_student = Student.query.filter_by(email="testing_testing@test.com").first()
+    assert deleted_student is None
+    
+    
+    db.session.delete(data)
+    db.session.commit()
             
 def test_get_all_students(client):
     with app.test_client() as client:
@@ -107,13 +106,23 @@ def test_delete_existing_student(client):
 def test_delete_existing_student(client):
     with app.app_context():
         # Create a test student
-        student = Student(name='John Doe', email='johndoe@example.com')
+        student = Student(
+            name='John Doe',
+            email='johndoe@example.com',
+            school= "Test School",
+            school_class= "Class 1",
+            superpower= "Tester",
+            date_of_birth= "1980/09/23",
+            level= 0,
+            password= "123456",
+            avatar= "null",
+            )
         db.session.add(student)
         db.session.commit()
 
         # Delete the student
         response = client.delete(f'/students/{student.id}')
-        assert response.status_code == 204
+        assert response.status_code == 200
 
         # Verify that the student has been deleted from the database
         deleted_student = Student.query.get(student.id)
@@ -200,7 +209,7 @@ def test_get_all_students(client):
     
     assert response.status_code == 200
     
-    data = json.loads(response.data)
+    data =response.get_json()
     assert isinstance(data, list)
     
     # Assert individual student data
@@ -279,34 +288,94 @@ def test_get_student(client):
 # def student():
 #     # Create a test student object
 #     student = Student(name="John Doe", email="johndoe@example.com", password="password123")
+
 #     return student
 
+@pytest.fixture
+def student():
+    # Create a test student object
+    student = Student( email="Clemens26@gmail.com", password="123456")
+    return student
+
+def test_login_student(client, student):
+       
+    # db.session.add(student2)
+    # db.session.commit()
+
+    # Make a POST request to login as a student
+    data = {
+        "email": student.email,
+        "password": student.password
+    }
+    
+    response = client.post('/login', json=data)
+
+    # Validate the response status code
+    
+    assert response.status == '200 OK'
         
 # def test_login_student(client, student):
    
-#     db.session.add(student)
-#     db.session.commit()
+#     # db.session.add(student)
+#     # db.session.commit()
 
 #     # Make a POST request to login as a student
 #     data = {
 #         "email": student.email,
-#         "password": "password123"
+#         "password": student.password
 #     }
+    
 #     response = client.post('/login', json=data)
 
 #     # Validate the response status code
-#     assert response.status_code == 200
-
-#     # Validate the response data
-#     data = response.json
-#     assert 'access_token' in data
-#     assert 'id' in data
-#     assert 'name' in data
-#     assert 'email' in data
-#     assert 'role' in data
-#     assert 'school' in data
-#     assert 'school_class' in data
-#     assert 'level' in data
-#     assert 'avatar' in data
     
+#     assert response.status == '401 UNAUTHORIZED'
 
+    # Validate the response data
+    data = response.json
+    assert 'access_token' in data
+    assert 'id' in data
+    assert 'name' in data
+    assert 'email' in data
+    assert 'role' in data
+    assert 'school' in data
+    assert 'school_class' in data
+    assert 'level' in data
+    assert 'avatar' in data
+    
+def test_get_student_profile(client):
+    with app.app_context():
+        # Create a test student
+        test_student = Student(
+            name='Test Student',
+            email='teststudent1@example.com',
+            school= "Test School",
+            school_class= "Class 1",
+            superpower= "Tester",
+            date_of_birth= "19800923",
+            level= 0,
+            password= "123456",
+            avatar= "hejs.jpg",
+            role="student"
+        )
+        db.session.add(test_student)
+        db.session.commit()
+
+        # Send a GET request to fetch the student profile
+        response = client.get(f'/students/{test_student.id}')
+        assert response.status_code == 200
+
+        # Check if the response JSON matches the expected values
+        expected_response = {
+            'id': test_student.id,
+            'name': test_student.name,
+            'email': test_student.email,
+            'avatar': test_student.avatar
+        }
+        assert response.get_json() == expected_response
+
+        # Delete the test student
+        db.session.delete(test_student)
+        db.session.commit()
+
+    
